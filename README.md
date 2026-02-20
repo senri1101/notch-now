@@ -1,7 +1,62 @@
-# Tauri + Vanilla TS
+# doing-now
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
+A lightweight macOS floating app that keeps your current task visible at all times.
 
-## Recommended IDE Setup
+## Overview
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+Trigger a global shortcut to display what you're working on right now. The bubble is click-through by default, so it never gets in your way.
+
+```text
+╔══════════════════════╗
+║  Pinned to top-left  ║
+║  ┌──────────────┐    ║
+║  │ Design review │   ║
+║  └──────────────┘    ║
+║   (click-through)    ║
+╚══════════════════════╝
+```
+
+## Usage
+
+| Action | Effect |
+| ------ | ------ |
+| `⌥ ⌘ Space` (once) | Briefly highlight the bubble |
+| `⌥ ⌘ Space` (double-tap) | Enter edit mode |
+| `Enter` | Save and close |
+| `Escape` | Cancel edit |
+
+- Text is capped at **20 characters**
+- Displays **"Now"** when empty
+- Text is persisted to `localStorage` automatically
+
+## Development
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) (macOS: Xcode Command Line Tools)
+
+### Setup
+
+```bash
+npm install
+```
+
+### Run (dev mode)
+
+```bash
+npm run tauri dev
+```
+
+### Build
+
+```bash
+npm run tauri build
+```
+
+## Tech Stack
+
+- [Tauri 2](https://v2.tauri.app/) — Rust-based desktop app framework
+- [TypeScript](https://www.typescriptlang.org/) + [Vite](https://vite.dev/) — frontend
+- Rust — backend (global shortcut, window management)

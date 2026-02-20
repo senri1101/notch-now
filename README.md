@@ -20,8 +20,12 @@ Trigger a global shortcut to display what you're working on right now. The bubbl
 
 Visit **[senri1101.github.io/notch-now](https://senri1101.github.io/notch-now/)** and click the download button. Drag **notch-now.app** into your Applications folder.
 
-> **Note:** The app is not code-signed. On first launch, macOS will block it. To open it anyway:
-> right-click the app → **Open** → **Open** in the dialog.
+> **Note:** The app is not code-signed or notarized. macOS will show a "damaged" error on first launch.
+> Remove the quarantine attribute with Terminal, then open normally:
+>
+> ```bash
+> xattr -cr ~/Downloads/notch-now.app
+> ```
 
 ## Usage
 

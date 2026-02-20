@@ -473,7 +473,8 @@
       </div>
       <p class="footer-note">
         macOS only &middot; Requires macOS 11+<br />
-        Not code-signed — on first launch, right-click the app and choose <strong>Open</strong>.
+        Not code-signed — macOS will show a &ldquo;damaged&rdquo; error on first launch.<br />
+        Run <code style="font-family:monospace;font-size:0.75rem;color:var(--text-2)">xattr -cr ~/Downloads/notch-now.app</code> in Terminal, then open normally.
       </p>
     </footer>
 

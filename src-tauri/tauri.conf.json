@@ -16,8 +16,8 @@
       {
         "label": "main",
         "title": "notch-now",
-        "width": 720,
-        "height": 48,
+        "width": 320,
+        "height": 44,
         "decorations": false,
         "transparent": true,
         "resizable": false,

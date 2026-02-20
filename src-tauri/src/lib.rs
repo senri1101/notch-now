@@ -89,21 +89,17 @@ fn handle_hotkey_pressed(app: &AppHandle) {
     });
 }
 
-fn center_window_to_top(window: &WebviewWindow) {
+fn place_window_to_top_left(window: &WebviewWindow) {
     let Some(monitor) = window.current_monitor().ok().flatten() else {
         return;
     };
-    let Ok(window_size) = window.outer_size() else {
-        return;
-    };
-
     let monitor_position = monitor.position();
-    let monitor_size = monitor.size();
-    let centered_x =
-        monitor_position.x + ((monitor_size.width as i32 - window_size.width as i32) / 2);
-    let top_y = monitor_position.y;
+    let top_left_x = monitor_position.x + 8;
+    let top_left_y = monitor_position.y + 6;
 
-    let _ = window.set_position(Position::Physical(PhysicalPosition::new(centered_x, top_y)));
+    let _ = window.set_position(Position::Physical(PhysicalPosition::new(
+        top_left_x, top_left_y,
+    )));
 }
 
 #[cfg(desktop)]
@@ -148,7 +144,7 @@ pub fn run() {
             register_global_shortcut(app)?;
 
             if let Some(window) = app.get_webview_window("main") {
-                center_window_to_top(&window);
+                place_window_to_top_left(&window);
                 let _ = window.set_ignore_cursor_events(true);
             }
 

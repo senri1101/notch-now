@@ -1,7 +1,12 @@
 :root {
   --bubble-bg: rgba(20, 20, 20, 0.72);
   --bubble-bg-strong: rgba(20, 20, 20, 0.9);
-  --bubble-text: rgba(255, 255, 255, 0.9);
+  --bubble-text: rgba(255, 255, 255, 0.56);
+  --bubble-text-strong: rgba(255, 255, 255, 0.92);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-weight: 500;
 }
 
 html,
@@ -21,12 +26,11 @@ body {
 
 .bubble {
   position: absolute;
-  top: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 460px;
-  max-width: calc(100vw - 24px);
-  height: 36px;
+  top: 6px;
+  left: 8px;
+  width: 280px;
+  max-width: calc(100vw - 16px);
+  height: 30px;
   border-radius: 999px;
   background: var(--bubble-bg);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -36,7 +40,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 18px;
+  padding: 0 12px;
   box-sizing: border-box;
 }
 
@@ -46,10 +50,12 @@ body {
 }
 
 .label {
-  max-width: 400px;
+  max-width: 244px;
   font-size: 13px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
+  line-height: 1.2;
   color: var(--bubble-text);
+  transition: color 0.16s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,15 +63,23 @@ body {
 
 .input {
   width: 100%;
-  height: 28px;
+  height: 22px;
   border: 0;
   border-radius: 999px;
   outline: 0;
-  padding: 0 14px;
+  padding: 0 10px;
   box-sizing: border-box;
   font-size: 13px;
+  font-family: inherit;
+  font-weight: 500;
   color: var(--bubble-text);
+  transition: color 0.16s ease;
   background: rgba(255, 255, 255, 0.12);
+}
+
+.bubble.emphasis .label,
+.bubble.emphasis .input {
+  color: var(--bubble-text-strong);
 }
 
 .hidden {

@@ -13,6 +13,7 @@ if (!bubble || !label || !input) {
 }
 
 let emphasisTimerId: number | null = null;
+let isComposing = false;
 
 const setClickThrough = async (enable: boolean) => {
   try {
@@ -27,7 +28,7 @@ const readStoredText = () => (localStorage.getItem(STORAGE_KEY) ?? "").slice(0, 
 const setText = (rawText: string) => {
   const text = rawText.slice(0, 20);
   localStorage.setItem(STORAGE_KEY, text);
-  label.textContent = text.length > 0 ? `◉ ${text}` : "◉";
+  label.textContent = text.length > 0 ? text : "Now";
 };
 
 const clearEmphasisTimer = () => {
@@ -68,14 +69,35 @@ const enterEditMode = () => {
   });
 };
 
+input.addEventListener("compositionstart", () => {
+  isComposing = true;
+});
+
+input.addEventListener("compositionend", () => {
+  isComposing = false;
+});
+
 input.addEventListener("keydown", (event) => {
+  const isImeComposing =
+    event.isComposing ||
+    isComposing ||
+    // Safari/macOS IME fallback
+    (event as KeyboardEvent & { keyCode?: number }).keyCode === 229;
+
   if (event.key === "Enter") {
+    if (isImeComposing) {
+      return;
+    }
+    event.preventDefault();
     setText(input.value);
     enterNormalMode();
     return;
   }
 
   if (event.key === "Escape") {
+    if (isImeComposing) {
+      return;
+    }
     enterNormalMode();
   }
 });

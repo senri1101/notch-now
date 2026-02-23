@@ -22,6 +22,31 @@ fn set_click_through(window: WebviewWindow, enable: bool) -> Result<(), String> 
         .map_err(|error| error.to_string())
 }
 
+// D1: File-based persistence
+#[tauri::command]
+fn read_text(app: AppHandle) -> Result<String, String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| e.to_string())?;
+    let file_path = data_dir.join("task.txt");
+    if !file_path.exists() {
+        return Ok(String::new());
+    }
+    std::fs::read_to_string(&file_path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn write_text(app: AppHandle, text: String) -> Result<(), String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| e.to_string())?;
+    std::fs::create_dir_all(&data_dir).map_err(|e| e.to_string())?;
+    let file_path = data_dir.join("task.txt");
+    std::fs::write(&file_path, text).map_err(|e| e.to_string())
+}
+
 fn emit_mode(app: &AppHandle, mode: &str) {
     if let Some(window) = app.get_webview_window("main") {
         match mode {
@@ -87,11 +112,11 @@ fn handle_hotkey_pressed(app: &AppHandle) {
             if let Some(window) = app_handle.get_webview_window("main") {
                 let is_visible = window.is_visible().unwrap_or(true);
                 if is_visible {
-                    // ウィンドウが表示中 → 最小化（非表示）
+                    // Window visible → hide
                     let _ = window.set_ignore_cursor_events(true);
                     let _ = window.hide();
                 } else {
-                    // ウィンドウが非表示 → 表示してemphasisモード
+                    // Window hidden → show with emphasis
                     let _ = window.show();
                     let _ = window.set_focus();
                     let _ = window.emit("mode", "emphasis".to_string());
@@ -112,6 +137,30 @@ fn place_window_to_top_left(window: &WebviewWindow) {
     let _ = window.set_position(Position::Physical(PhysicalPosition::new(
         top_left_x, top_left_y,
     )));
+}
+
+// A3: System tray icon
+fn setup_tray(app: &App) -> tauri::Result<()> {
+    use tauri::menu::{MenuBuilder, MenuItemBuilder};
+    use tauri::tray::TrayIconBuilder;
+
+    let quit_item = MenuItemBuilder::with_id("quit", "Quit doing-now").build(app)?;
+    let menu = MenuBuilder::new(app).item(&quit_item).build()?;
+
+    if let Some(icon) = app.default_window_icon() {
+        let tray = TrayIconBuilder::new()
+            .icon(icon.clone())
+            .menu(&menu)
+            .show_menu_on_left_click(false)
+            .on_menu_event(|app, event| match event.id.as_ref() {
+                "quit" => app.exit(0),
+                _ => {}
+            })
+            .build(app)?;
+        // Keep the tray alive for the entire app lifetime
+        std::mem::forget(tray);
+    }
+    Ok(())
 }
 
 #[cfg(desktop)]
@@ -152,8 +201,28 @@ pub fn run() {
     tauri::Builder::default()
         .manage(HotkeyState::default())
         .plugin(tauri_plugin_opener::init())
+        // A2: Launch at login
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            None,
+        ))
         .setup(|app| {
             register_global_shortcut(app)?;
+
+            // A3: System tray
+            if let Err(e) = setup_tray(app) {
+                eprintln!("tray setup failed: {e}");
+            }
+
+            // A2: Enable autostart on first run
+            #[cfg(desktop)]
+            {
+                use tauri_plugin_autostart::ManagerExt;
+                let autolaunch = app.autolaunch();
+                if !autolaunch.is_enabled().unwrap_or(false) {
+                    let _ = autolaunch.enable();
+                }
+            }
 
             if let Some(window) = app.get_webview_window("main") {
                 place_window_to_top_left(&window);
@@ -162,7 +231,11 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![set_click_through])
+        .invoke_handler(tauri::generate_handler![
+            set_click_through,
+            read_text,
+            write_text,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

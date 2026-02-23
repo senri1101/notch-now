@@ -66,6 +66,13 @@ npm run tauri dev
 npm run tauri build
 ```
 
+## TODO
+
+- [ ] **E1: Code Signing & Notarization**
+  The app is currently unsigned; macOS Gatekeeper will show a warning on first launch.
+  After joining the Apple Developer Program, configure `bundle.macOS.signingIdentity` and `bundle.macOS.notarize` in `tauri.conf.json`.
+  See: [Tauri - Sign macOS apps](https://v2.tauri.app/distribute/sign/macos/)
+
 ## Tech Stack
 
 - [Tauri 2](https://v2.tauri.app/) — Rust-based desktop app framework

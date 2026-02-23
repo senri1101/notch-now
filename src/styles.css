@@ -47,6 +47,25 @@ body {
   background: var(--bubble-bg-strong);
 }
 
+/* C2 – Edit mode border highlight */
+.bubble.edit {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* C1 – Save animation */
+@keyframes saveFlash {
+  0% {
+    border-color: rgba(100, 200, 100, 0.7);
+  }
+  100% {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.bubble.saving {
+  animation: saveFlash 0.5s ease-out forwards;
+}
+
 .label {
   max-width: 244px;
   font-size: 13px;
@@ -78,6 +97,16 @@ body {
 .bubble.emphasis .label,
 .bubble.emphasis .input {
   color: var(--bubble-text-strong);
+}
+
+/* B2 – Character counter */
+.counter {
+  position: absolute;
+  right: 14px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  line-height: 1;
 }
 
 .hidden {

@@ -44,7 +44,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDUyMThDQTE0Qjg5NkEwOUEKUldTYW9KYTRGTW9ZVW9KdC9nOSswTmpmenYyd3dOZmFCWm93cjZHcVBDQTM2WDdzYjBCRlpxWW8K",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU5MDBGQkFFRjc5RDc1NDkKUldSSmRaMzNydnNBNlZWTTZyZXI2TFNFNFVOalQ3bFp5VDE3ZlY0Z3ZwcFRjTTJlbUVxWmtNUHkK",
       "endpoints": [
         "https://github.com/senri1101/doing-now/releases/latest/download/latest.json"
       ]
